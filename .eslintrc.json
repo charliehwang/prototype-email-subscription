@@ -1,0 +1,8 @@
+{
+  "extends": ["airbnb-typescript/base"],
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "ecmaFeatures": { "jsx": true },
+    "sourceType": "module"
+  }
+}
