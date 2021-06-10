@@ -1,11 +1,73 @@
 Resources:
+  HelloLambdaServiceRoleE071F162:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: EmailSubscriptionStack/HelloLambda/ServiceRole/Resource
+  HelloLambda3D9C82D6:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters1429e821622620a1ed8b4ae3e1af903f2b3a1f76ccd9d45afdc6c42092acb405S3Bucket18458390
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters1429e821622620a1ed8b4ae3e1af903f2b3a1f76ccd9d45afdc6c42092acb405S3VersionKey0FB11DE0
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters1429e821622620a1ed8b4ae3e1af903f2b3a1f76ccd9d45afdc6c42092acb405S3VersionKey0FB11DE0
+      Role:
+        Fn::GetAtt:
+          - HelloLambdaServiceRoleE071F162
+          - Arn
+      Environment:
+        Variables:
+          isProduction: absolutely not
+      Handler: hello.handler
+      Runtime: nodejs12.x
+    DependsOn:
+      - HelloLambdaServiceRoleE071F162
+    Metadata:
+      aws:cdk:path: EmailSubscriptionStack/HelloLambda/Resource
+      aws:asset:path: /home/admin/workspace/aws/email-subscription/lambda
+      aws:asset:property: Code
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Analytics: v2:deflate64:H4sIAAAAAAAAAzPUMzSw0DNQdEgsL9ZNTsnWT84vStWrDi5JTM7Wcc7PKy4pKk0u0XFOywtKLc4vLUpOBbGBEimZJZn5ebU6efkpqXpZxfplhiZ6huZAk7KKMzN1i0rzSjJzU/WCIDQAtI0bo2YAAAA=
+      Analytics: v2:deflate64:H4sIAAAAAAAAA0WOwQ7CIBBEv8U73ZZookeNiWdTv2AF2tCWJWFBD4R/t9QYTzO7ebszEmR3gm53xjc3Ss9tVj4YyI+IahYXZhNXO1oaRW/Yp6CMuHriGJKK4jrQHQM6E02owx8ZaKW0jdZTEfV3XtA9NUK+JVJ1XZmfL8Kig9z7ZTutWgTvG6z5DFuNUgR5bWDi9iUPII9r64mtbUKiaJ2B/qsfga0f69IAAAA=
     Metadata:
       aws:cdk:path: EmailSubscriptionStack/CDKMetadata/Default
     Condition: CDKMetadataAvailable
+Parameters:
+  AssetParameters1429e821622620a1ed8b4ae3e1af903f2b3a1f76ccd9d45afdc6c42092acb405S3Bucket18458390:
+    Type: String
+    Description: S3 bucket for asset "1429e821622620a1ed8b4ae3e1af903f2b3a1f76ccd9d45afdc6c42092acb405"
+  AssetParameters1429e821622620a1ed8b4ae3e1af903f2b3a1f76ccd9d45afdc6c42092acb405S3VersionKey0FB11DE0:
+    Type: String
+    Description: S3 key for asset version "1429e821622620a1ed8b4ae3e1af903f2b3a1f76ccd9d45afdc6c42092acb405"
+  AssetParameters1429e821622620a1ed8b4ae3e1af903f2b3a1f76ccd9d45afdc6c42092acb405ArtifactHash68B85F27:
+    Type: String
+    Description: Artifact hash for asset "1429e821622620a1ed8b4ae3e1af903f2b3a1f76ccd9d45afdc6c42092acb405"
 Conditions:
   CDKMetadataAvailable:
     Fn::Or:
