@@ -1,21 +1,28 @@
-import * as sns from "@aws-cdk/aws-sns";
-import * as subs from "@aws-cdk/aws-sns-subscriptions";
-import * as sqs from "@aws-cdk/aws-sqs";
-import * as cdk from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
+import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
+import * as cdk from "@aws-cdk/core";
+import * as path from "path";
+import * as apiGateway from "@aws-cdk/aws-apigateway";
 
 export class EmailSubscriptionStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const helloLambda = new lambda.Function(this, "HelloLambda", {
-      // where our code is located (inside the lambda directory)
-      code: lambda.Code.fromAsset("lambda"),
-      // the function executed whenever this lambda function is triggered (the handler function inside hello.ts file)
-      handler: "hello.handler",
-      // most recent node
-      runtime: lambda.Runtime.NODEJS_12_X,
-      environment: { isProduction: "absolutely not" },
+    const myFunction = new NodejsFunction(this, "my-function", {
+      memorySize: 1024,
+      timeout: cdk.Duration.seconds(5),
+      runtime: lambda.Runtime.NODEJS_14_X,
+      handler: "main",
+      entry: path.join(__dirname, `/../src/my-lambda/index.ts`),
+      bundling: {
+        minify: true,
+        externalModules: ["aws-sdk"],
+      },
+    });
+
+    new apiGateway.LambdaRestApi(this, "Endpoint", {
+      // @ts-ignore
+      handler: myFunction,
     });
   }
 }
